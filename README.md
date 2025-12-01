@@ -73,13 +73,104 @@ curl -X POST your_callback_url \
 
 ## 📄 三种回调模板（占位符版）
 
-脚本已包含以下模板，你只需要按需补充：
+下面为 **完全脱敏、并带有中文注释的三种回调模板**，可直接用于你的脚本或测试环境。
 
-* NEW 状态
-* PENDING 状态
-* COMPLETED 状态
+### 🆕 NEW 状态回调（订单已创建，未付款）
 
-模板完全来自日志中的真实字段结构，可 100% 兼容你的生产环境。
+```json
+{
+  "amount": "0.000000",               // 当前到账金额（未支付为 0）
+  "comment": "Invoice details URL",    // 交易详情页面链接
+  "currency": "USDT_TRX",             // 支付币种
+  "invoice_commission": "1.500360",   // 手续费
+  "invoice_sum": "9.902376",          // 订单金额（不含手续费）
+  "invoice_total_sum": "11.402736",   // 实际应付金额
+  "ipn_type": "invoice",              // 固定为 invoice
+  "merchant": "YourMerchantName",      // （脱敏）商户名称
+  "merchant_id": "xxxxxx",            // （脱敏）商户 ID
+  "order_name": "测试商品",            // 商品名称
+  "order_number": "order-xxxxxx",     // （脱敏）订单号
+  "pending_amount": "11.402736",      // 未支付金额
+  "psys_cid": "USDT_TRX",             // 支付系统币种 ID
+  "qr_code": "qr_placeholder",        // 二维码占位符
+  "source_amount": "9.90",            // 原始法币金额
+  "source_currency": "USD",           // 法币种类
+  "source_rate": "1.000240",          // 汇率
+  "status": "new",                    // NEW 状态
+  "tx_urls": null,                     // 无链上交易
+  "txn_id": "invoice_xxxxxx",         // （脱敏）发票/交易 ID
+  "wallet_hash": "wallet_xxxxxx",     // （脱敏）钱包哈希
+  "verify_hash": "hash_xxxxxx"        // （脱敏）签名
+}
+```
+
+---
+
+### 🟡 PENDING 状态回调（用户已付款，等待链上确认）
+
+```json
+{
+  "amount": "0.000000",               // 已付款但未确认，仍为 0
+  "comment": "Invoice details URL",
+  "currency": "USDT_TRX",
+  "invoice_commission": "1.500360",
+  "invoice_sum": "9.902376",
+  "invoice_total_sum": "11.402736",
+  "ipn_type": "invoice",
+  "merchant": "YourMerchantName",
+  "merchant_id": "xxxxxx",
+  "order_name": "测试商品",
+  "order_number": "order-xxxxxx",
+  "pending_amount": "11.402736",      // 仍显示待确认金额
+  "psys_cid": "USDT_TRX",
+  "qr_code": "qr_placeholder",
+  "source_amount": "9.90",
+  "source_currency": "USD",
+  "source_rate": "1.000240",
+  "status": "pending",                // PENDING 状态
+  "tx_urls": [                         // 链上交易记录
+    "https://tronscan.org/tx/xxxxxx"
+  ],
+  "txn_id": "invoice_xxxxxx",
+  "wallet_hash": "wallet_xxxxxx",
+  "verify_hash": "hash_xxxxxx"
+}
+```
+
+---
+
+### 🟢 COMPLETED 状态回调（支付完成）
+
+```json
+{
+  "amount": "11.400000",              // 最终入账金额
+  "comment": "Invoice details URL",
+  "confirmations": "37",              // 链上确认数
+  "currency": "USDT_TRX",
+  "invoice_commission": "1.500375",
+  "invoice_sum": "9.902376",
+  "invoice_total_sum": "11.402736",
+  "ipn_type": "invoice",
+  "merchant": "YourMerchantName",
+  "merchant_id": "xxxxxx",
+  "order_name": "测试商品",
+  "order_number": "order-xxxxxx",
+  "pending_amount": "0.002736",       // 剩余少量 dust
+  "psys_cid": "USDT_TRX",
+  "qr_code": "qr_placeholder",
+  "source_amount": "9.90",
+  "source_currency": "USD",
+  "source_rate": "1.000240",
+  "status": "completed",              // COMPLETED 状态
+  "tx_urls": [
+    "https://tronscan.org/tx/xxxxxx",
+    "https://tronscan.org/tx/yyyyyy"
+  ],
+  "txn_id": "invoice_xxxxxx",
+  "wallet_hash": "wallet_xxxxxx",
+  "verify_hash": "hash_xxxxxx"
+}
+```
 
 ---
 
@@ -191,6 +282,103 @@ Mock callbacks are not sent from Plisio servers. Disable temporarily:
 ### 3. Not for production use
 
 This tool is for development/testing only.
+
+---
+
+## 📄 Plisio Callback Templates (Desensitized, English Comments)
+
+### 🆕 NEW Callback (desensitized)
+
+```json
+{
+  "amount": "0.000000",              // No payment received yet
+  "comment": "Invoice details URL",   // Link to Plisio transaction page
+  "currency": "USDT_TRX",            // Payment currency
+  "invoice_commission": "1.500360",  // Commission fee
+  "invoice_sum": "9.902376",         // Invoice amount before commission
+  "invoice_total_sum": "11.402736",  // Total payable amount
+  "ipn_type": "invoice",             // Always "invoice"
+  "merchant": "YourMerchantName",     // Masked merchant name
+  "merchant_id": "xxxxxx",           // Masked merchant ID
+  "order_name": "ProductName",       // Order name
+  "order_number": "order-xxxxxx",    // Masked order number
+  "pending_amount": "11.402736",     // Remaining amount to pay
+  "psys_cid": "USDT_TRX",            // Payment system currency ID
+  "qr_code": "qr_placeholder",       // QR code placeholder
+  "source_amount": "9.90",           // Original fiat amount
+  "source_currency": "USD",          // Fiat currency
+  "source_rate": "1.000240",         // Conversion rate
+  "status": "new",                   // NEW state
+  "tx_urls": null,                    // No blockchain tx yet
+  "txn_id": "invoice_xxxxxx",        // Masked invoice ID
+  "wallet_hash": "wallet_xxxxxx",    // Masked wallet hash
+  "verify_hash": "hash_xxxxxx"       // Signature hash
+}
+```
+
+### 🟡 PENDING Callback (desensitized)
+
+```json
+{
+  "amount": "0.000000",              // Payment broadcasted but not confirmed
+  "comment": "Invoice details URL",
+  "currency": "USDT_TRX",
+  "invoice_commission": "1.500360",
+  "invoice_sum": "9.902376",
+  "invoice_total_sum": "11.402736",
+  "ipn_type": "invoice",
+  "merchant": "YourMerchantName",
+  "merchant_id": "xxxxxx",
+  "order_name": "ProductName",
+  "order_number": "order-xxxxxx",
+  "pending_amount": "11.402736",
+  "psys_cid": "USDT_TRX",
+  "qr_code": "qr_placeholder",
+  "source_amount": "9.90",
+  "source_currency": "USD",
+  "source_rate": "1.000240",
+  "status": "pending",               // PENDING state
+  "tx_urls": [                        // Blockchain transaction(s)
+    "https://tronscan.org/tx/xxxxxx"
+  ],
+  "txn_id": "invoice_xxxxxx",
+  "wallet_hash": "wallet_xxxxxx",
+  "verify_hash": "hash_xxxxxx"
+}
+```
+
+### 🟢 COMPLETED Callback (desensitized)
+
+```json
+{
+  "amount": "11.400000",             // Payment fully received
+  "comment": "Invoice details URL",
+  "confirmations": "37",             // Blockchain confirmations
+  "currency": "USDT_TRX",
+  "invoice_commission": "1.500375",
+  "invoice_sum": "9.902376",
+  "invoice_total_sum": "11.402736",
+  "ipn_type": "invoice",
+  "merchant": "YourMerchantName",
+  "merchant_id": "xxxxxx",
+  "order_name": "ProductName",
+  "order_number": "order-xxxxxx",
+  "pending_amount": "0.002736",      // Remaining (rounding dust)
+  "psys_cid": "USDT_TRX",
+  "qr_code": "qr_placeholder",
+  "source_amount": "9.90",
+  "source_currency": "USD",
+  "source_rate": "1.000240",
+  "status": "completed",             // COMPLETED state
+  "tx_urls": [
+    "https://tronscan.org/tx/xxxxxx",
+    "https://tronscan.org/tx/yyyyyy"
+  ],
+  "txn_id": "invoice_xxxxxx",
+  "wallet_hash": "wallet_xxxxxx",
+  "verify_hash": "hash_xxxxxx"
+}
+```
 
 ---
 
