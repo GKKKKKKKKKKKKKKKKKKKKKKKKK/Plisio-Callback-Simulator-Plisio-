@@ -40,7 +40,7 @@ SECRET_KEY = "your_secret_key_here"
 ### 3. 运行脚本生成签名
 
 ```
-python plisio_callback_simulator.py
+python plisio.py
 ```
 
 运行后脚本将输出：
@@ -145,7 +145,7 @@ Fill the payload with your test data.
 ### 3. Run the script
 
 ```
-python plisio_callback_simulator.py
+python plisio.py
 ```
 
 You will receive:
@@ -195,11 +195,3 @@ This tool is for development/testing only.
 ---
 
 ## ✔ Done
-
-如果你需要：
-
-* 自动随机生成模拟数据
-* 三次状态批量回调工具
-* 一键发送到你的 API 的测试工具
-
-我可以继续为你生成。
